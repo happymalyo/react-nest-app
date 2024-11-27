@@ -1,26 +1,32 @@
 ### Project Structure
-react-node-project/
+
+react-nest-project/
 ├── backend/
-│   ├── src/                  # Source files for NestJS backend
-│   ├── dist/                 # Compiled backend files (ignored by Git)
-│   ├── Dockerfile            # For production
-│   ├── Dockerfile.dev        # For development
-│   ├── package.json          # Backend dependencies
-│   ├── package-lock.json     # Backend lock file
-│   └── .env                  # Backend environment variables
+│ ├── Dockerfile # Dockerfile for backend (development or production)
+│ ├── Dockerfile.dev # Dockerfile for backend development
+│ ├── src/ # Backend source code
+│ ├── package.json # Backend dependencies
+│ ├── tsconfig.json # TypeScript config (for NestJS)
+│ ├── .env # Backend environment variables
+│ └── init.sql # SQL file for setting up the database (optional for DB initialization)
+│
 ├── frontend/
-│   ├── public/               # Static frontend assets
-│   ├── src/                  # React frontend source files
-│   ├── build/                # Built frontend files (ignored by Git)
-│   ├── Dockerfile            # For production
-│   ├── Dockerfile.dev        # For development
-│   ├── nginx.conf            # NGINX configuration for production
-│   ├── package.json          # Frontend dependencies
-│   ├── package-lock.json     # Frontend lock file
-│   └── .env                  # Frontend environment variables
-├── .dockerignore             # Docker ignore file
-├── .gitignore                # Git ignore file
-├── docker-compose.yml        # For orchestrating backend and frontend
-└── README.md                 # Project documentation
+│ ├── Dockerfile # Dockerfile for frontend (production)
+│ ├── Dockerfile.dev # Dockerfile for frontend development
+│ ├── public/ # Frontend public files (like index.html)
+│ ├── src/ # Frontend source code
+│ ├── package.json # Frontend dependencies
+│ ├── .env # Frontend environment variables
+│ └── nginx.conf # Nginx configuration for production
+│
+├── mariadb/ # Folder to hold MariaDB initialization SQL file (optional)
+│ └── init.sql # SQL script for creating tables (users, articles, etc.)
+│
+├── .env # Root environment variables (shared between services)
+├── docker-compose.yml # Docker Compose configuration for the whole project
+├── .dockerignore # Docker ignore file (to exclude unnecessary files)
+└── README.md # Project documentation
 
+### Database access
 
+> sudo docker exec -it mariadb mariadb -u mario -p
