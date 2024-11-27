@@ -1,0 +1,20 @@
+# Fetching node image
+FROM node:20 AS development
+
+# Declaring env
+ENV NODE_ENV development
+
+# Setting up the work directory
+WORKDIR /react-app
+
+# Installing dependencies
+COPY ./package*.json /react-app
+
+RUN npm install --silent
+
+# Copying all the files in our project
+COPY . .
+
+EXPOSE $FRONTEND_PORT
+# Starting our application
+CMD ["npm","start"]

@@ -1,0 +1,57 @@
+version: "3.8"
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    restart: always
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    volumes:
+      - ./backend:/svr/app
+      - /svr/app/node_modules
+    env_file:
+      - .env
+    depends_on:
+      - mariadb
+    networks:
+      - internal-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    restart: always
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    volumes:
+      - ./frontend:/react-app
+      - /react-app/node_modules
+    env_file:
+      - .env
+    networks:
+      - internal-network
+    command: "npm start"
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_DATABASE=${DB_NAME}
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - internal-network
+    restart: always
+
+volumes:
+  mariadb_data:
+
+networks:
+  internal-network:
+    driver: bridge

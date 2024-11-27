@@ -1,0 +1,24 @@
+# Get the official node image
+FROM node:20 AS development
+
+ENV NODE_ENV=development
+
+# Create and Set the working directory inside the container
+RUN mkdir -p /svr/app
+
+WORKDIR /svr/app
+
+# --silent hide logs when building the docker image.
+RUN npm i -g @nestjs/cli --silent
+
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
+
+# Install the application dependencies
+RUN npm install --silent
+
+# Copy the rest of the application files
+COPY . .
+
+EXPOSE $BACKEND_PORT
+CMD ["npm", "run", "start:debug"]

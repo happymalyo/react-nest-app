@@ -1,0 +1,7 @@
+react-nest-project/**/node_modules
+react-nest-project/**/*.log
+react-nest-project/**/*.md
+.gitignore
+.git
+*.log
+*.md
