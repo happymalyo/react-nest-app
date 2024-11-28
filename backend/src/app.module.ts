@@ -12,13 +12,12 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: path.resolve(__dirname, '../../.env'),
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        type: 'mysql',
+        type: 'mariadb',
         host: configService.get('DB_HOST'),
         port: configService.get('DB_PORT'),
         username: configService.get('DB_USER'),
