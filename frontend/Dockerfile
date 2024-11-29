@@ -1,5 +1,5 @@
 # Fetching node image 
-FROM node:alpine AS builder
+FROM node:21 AS builder
 
 # Declaring env
 ENV NODE_ENV production

@@ -18,7 +18,7 @@ function App() {
         {/* Define Routes */}
         <Routes>
           <Route
-            path="/app"
+            path="/"
             element={
               <Layout>
                 <Home />
