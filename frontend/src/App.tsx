@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Layout from "./components/dashboard/Layout";
 import Article from "./components/dashboard/article";
 import User from "./components/dashboard/users";
+import ArticleForm from "./components/dashboard/article/ArticleForm";
 
 import "./App.css";
 
@@ -30,6 +31,22 @@ function App() {
             element={
               <Layout>
                 <Article />
+              </Layout>
+            }
+          />
+          <Route
+            path="/app/articles/add"
+            element={
+              <Layout>
+                <ArticleForm />
+              </Layout>
+            }
+          />
+          <Route
+            path="/app/articles/edit/:id"
+            element={
+              <Layout>
+                <ArticleForm />
               </Layout>
             }
           />

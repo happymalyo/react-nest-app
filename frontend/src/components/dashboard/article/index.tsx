@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
 import {
   Box,
   Button,
-  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   TextField,
   Table,
   TableBody,
@@ -12,50 +16,101 @@ import {
   TableRow,
   Paper,
   Typography,
+  IconButton,
   Pagination,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import ImportExportIcon from "@mui/icons-material/ImportExport";
 import AddIcon from "@mui/icons-material/Add";
+import { fetchArticles } from "../../../api/articleApi";
+import { Link } from "react-router-dom";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
 
 function Article() {
-  const customers = [
-    {
-      name: "Alcides Antonio",
-      email: "alcides.antonio@devias.io",
-      location: "Madrid, Comunidad de Madrid, Spain",
-      phone: "908-691-3242",
-      signedUp: "Mar 8, 2024",
-    },
-    {
-      name: "Marcus Finn",
-      email: "marcus.finn@devias.io",
-      location: "Carson City, Nevada, USA",
-      phone: "415-907-2647",
-      signedUp: "Mar 8, 2024",
-    },
-    {
-      name: "Jie Yan",
-      email: "jie.yan@devias.io",
-      location: "North Canton, Ohio, USA",
-      phone: "770-635-2682",
-      signedUp: "Mar 8, 2024",
-    },
-    {
-      name: "Nasimiyu Danai",
-      email: "nasimiyu.danai@devias.io",
-      location: "Salt Lake City, Utah, USA",
-      phone: "801-301-7894",
-      signedUp: "Mar 8, 2024",
-    },
-    {
-      name: "Iulia Albu",
-      email: "iulia.albu@devias.io",
-      location: "Murray, Utah, USA",
-      phone: "313-812-8947",
-      signedUp: "Mar 8, 2024",
-    },
-  ];
+  const [articles, setArticles] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [articleToDelete, setArticleToDelete] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [error, setError] = useState("");
+  const token = localStorage.getItem("authToken");
+
+  useEffect(() => {
+    const loadArticles = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchArticles(token || "");
+        setArticles(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (token) {
+      loadArticles();
+    }
+  }, [token]);
+
+  // Handle delete click and open the dialog
+  const handleDelete = (id: number) => {
+    setArticleToDelete(id);
+    setOpenDeleteDialog(true);
+  };
+
+  // Close the delete confirmation dialog
+  const handleCloseDialog = () => {
+    setOpenDeleteDialog(false);
+    setArticleToDelete(null);
+  };
+
+  // Confirm delete and update articles list
+  const handleConfirmDelete = async () => {
+    if (articleToDelete) {
+      try {
+        // Perform the delete request
+        await axios.delete(`http://localhost:3000/articles/${articleToDelete}`);
+        // After successful deletion, reload the articles list
+        const updatedArticles = await fetchArticles(token || "");
+        setArticles(updatedArticles);
+      } catch (error) {
+        setError("Failed to delete article.");
+      }
+      setOpenDeleteDialog(false);
+    }
+  };
+
+  // Handle search input change
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  // Filter articles based on search term
+  const filteredArticles = articles.filter((article) =>
+    article.nom_article.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Pagination logic
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const currentArticles = filteredArticles.slice(
+    startIndex,
+    startIndex + rowsPerPage
+  );
+
+  // Calculate the number of pages
+  const totalPages = Math.ceil(filteredArticles.length / rowsPerPage);
+
+  // Handle page change
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setCurrentPage(value);
+  };
 
   return (
     <Box sx={{ padding: 3 }}>
@@ -68,61 +123,102 @@ function Article() {
           mb: 8,
         }}
       >
-        <Typography variant="h4">Customers</Typography>
-        <Box sx={{ display: "flex", gap: 1 }}>
-          <Button startIcon={<ImportExportIcon />}>Import</Button>
-          <Button startIcon={<ImportExportIcon />}>Export</Button>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            sx={{ textTransform: "none" }}
-          >
-            Add
-          </Button>
-        </Box>
+        <Typography variant="h4">Articles</Typography>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          sx={{ textTransform: "none" }}
+          component={Link} // This will turn the button into a link
+          to="/app/articles/add" // Path for adding a new article
+        >
+          Add Article
+        </Button>
       </Box>
 
       {/* Search Bar */}
       <Box sx={{ display: "flex", alignItems: "center", mb: 5 }}>
         <TextField
           variant="outlined"
-          placeholder="Search customer"
+          placeholder="Search article"
           size="small"
           InputProps={{
             startAdornment: <SearchIcon sx={{ mr: 1 }} />,
           }}
+          onChange={handleSearchChange}
         />
       </Box>
 
       {/* Table Section */}
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Location</TableCell>
-              <TableCell>Phone</TableCell>
-              <TableCell>Signed Up</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {customers.map((customer, index) => (
-              <TableRow key={index}>
-                <TableCell>
-                  <input type="checkbox" />
-                </TableCell>
-                <TableCell>{customer.name}</TableCell>
-                <TableCell>{customer.email}</TableCell>
-                <TableCell>{customer.location}</TableCell>
-                <TableCell>{customer.phone}</TableCell>
-                <TableCell>{customer.signedUp}</TableCell>
+      {loading ? (
+        <Typography>Loading...</Typography>
+      ) : error ? (
+        <Typography color="error">{error}</Typography>
+      ) : (
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Article Name</TableCell>
+                <TableCell>Quantity</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {filteredArticles.map((article: any, index: number) => (
+                <TableRow key={index}>
+                  <TableCell>{article.id_article}</TableCell>
+                  <TableCell>{article.nom_article}</TableCell>
+                  <TableCell>{article.quantity}</TableCell>
+                  <TableCell>
+                    {/* Edit Icon */}
+                    <IconButton
+                      color="primary"
+                      component={Link}
+                      to={`/app/articles/edit/${article.id_article}`} // Navigate to the edit page with the article ID
+                      sx={{ marginRight: 1 }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+
+                    {/* Delete Icon */}
+                    <IconButton
+                      color="secondary"
+                      onClick={() => handleDelete(article.id_article)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+
+      {/* Confirmation Dialog for Deleting Article */}
+      <Dialog open={openDeleteDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Delete Article</DialogTitle>
+        <DialogContent>
+          <p>Are you sure you want to delete this article?</p>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleCloseDialog}
+            color="primary"
+            disabled={loading}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleConfirmDelete}
+            color="secondary"
+            disabled={loading}
+          >
+            {loading ? "Deleting..." : "Delete"}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Pagination */}
       <Box
@@ -134,7 +230,12 @@ function Article() {
         }}
       >
         <Typography variant="body2">Rows per page: 5</Typography>
-        <Pagination count={5} color="primary" />
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+          color="primary"
+        />
       </Box>
     </Box>
   );

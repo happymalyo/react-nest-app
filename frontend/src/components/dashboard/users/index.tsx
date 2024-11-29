@@ -22,44 +22,6 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 function User() {
-  const customers = [
-    {
-      name: "Alcides Antonio",
-      email: "alcides.antonio@devias.io",
-      location: "Madrid, Comunidad de Madrid, Spain",
-      phone: "908-691-3242",
-      signedUp: "Mar 8, 2024",
-    },
-    {
-      name: "Marcus Finn",
-      email: "marcus.finn@devias.io",
-      location: "Carson City, Nevada, USA",
-      phone: "415-907-2647",
-      signedUp: "Mar 8, 2024",
-    },
-    {
-      name: "Jie Yan",
-      email: "jie.yan@devias.io",
-      location: "North Canton, Ohio, USA",
-      phone: "770-635-2682",
-      signedUp: "Mar 8, 2024",
-    },
-    {
-      name: "Nasimiyu Danai",
-      email: "nasimiyu.danai@devias.io",
-      location: "Salt Lake City, Utah, USA",
-      phone: "801-301-7894",
-      signedUp: "Mar 8, 2024",
-    },
-    {
-      name: "Iulia Albu",
-      email: "iulia.albu@devias.io",
-      location: "Murray, Utah, USA",
-      phone: "313-812-8947",
-      signedUp: "Mar 8, 2024",
-    },
-  ];
-
   const [users, setUsers] = useState([]); // Liste des utilisateurs
   const [loading, setLoading] = useState(true); // Indicateur de chargement
   const [error, setError] = useState("");
@@ -108,7 +70,7 @@ function User() {
             startIcon={<AddIcon />}
             sx={{ textTransform: "none" }}
           >
-            Add
+            Add user
           </Button>
         </Box>
       </Box>

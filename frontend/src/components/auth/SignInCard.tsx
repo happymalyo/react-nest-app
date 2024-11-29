@@ -41,9 +41,7 @@ export default function SignInCard() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState<string | null>(null);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
   const [passwordError, setPasswordError] = useState<string | null>(null);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
 
@@ -76,7 +74,7 @@ export default function SignInCard() {
       await login(email, password);
       toast.success("Sign-in successful!");
       // Redirect to /app
-      navigate("/app");
+      navigate("/");
     } catch (error: any) {
       toast.error(error.message);
     }
