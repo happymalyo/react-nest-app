@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Layout from "./components/dashboard/Layout";
 import Article from "./components/dashboard/article";
+import User from "./components/dashboard/users";
 
 import "./App.css";
 
@@ -17,7 +18,7 @@ function App() {
         {/* Define Routes */}
         <Routes>
           <Route
-            path="/"
+            path="/app"
             element={
               <Layout>
                 <Home />
@@ -25,10 +26,18 @@ function App() {
             }
           />
           <Route
-            path="/dashboard/articles"
+            path="/app/articles"
             element={
               <Layout>
                 <Article />
+              </Layout>
+            }
+          />
+          <Route
+            path="/app/users"
+            element={
+              <Layout>
+                <User />
               </Layout>
             }
           />

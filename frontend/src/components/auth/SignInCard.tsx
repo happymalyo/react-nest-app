@@ -14,6 +14,10 @@ import { styled } from "@mui/material/styles";
 import ForgotPassword from "./ForgotPassword";
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from "../ui/CustomIcons";
 import { toast } from "react-toastify";
+import { login } from "../../services/authService";
+import { validateEmail, validatePassword } from "../../utils/authUtils";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -34,11 +38,14 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 export default function SignInCard() {
-  const [emailError, setEmailError] = React.useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState<string | null>(null);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
-  const [passwordError, setPasswordError] = React.useState(false);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -48,54 +55,31 @@ export default function SignInCard() {
     setOpen(false);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (emailError || passwordError) {
-      toast.error(`${emailErrorMessage} \n ${passwordErrorMessage}`, {
-        position: "top-right",
-        autoClose: 5000,
-      });
-      event.preventDefault();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const emailValidation = validateEmail(email);
+    const passwordValidation = validatePassword(password);
+
+    if (emailValidation) setEmailError(emailValidation);
+    else setEmailError(null);
+
+    if (passwordValidation) setPasswordError(passwordValidation);
+    else setPasswordError(null);
+
+    if (emailValidation || passwordValidation) {
+      toast.error("Please fix the errors before submitting.");
       return;
     }
 
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-
-    toast.success("Connexion reussie", {
-      position: "top-right",
-      autoClose: 5000,
-    });
-    event.preventDefault();
-  };
-
-  const validateInputs = () => {
-    const email = document.getElementById("email") as HTMLInputElement;
-    const password = document.getElementById("password") as HTMLInputElement;
-
-    let isValid = true;
-
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage("Please enter a valid email address.");
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage("");
+    try {
+      await login(email, password);
+      toast.success("Sign-in successful!");
+      // Redirect to /app
+      navigate("/app");
+    } catch (error: any) {
+      toast.error(error.message);
     }
-
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage("Password must be at least 6 characters long.");
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage("");
-    }
-
-    return isValid;
   };
 
   return (
@@ -119,18 +103,18 @@ export default function SignInCard() {
         <FormControl>
           <FormLabel htmlFor="email">Email</FormLabel>
           <TextField
-            error={emailError}
-            helperText={emailErrorMessage}
+            error={!!emailError}
+            helperText={emailError}
             id="email"
             type="email"
-            name="username"
+            name="email"
             placeholder="your@email.com"
             autoComplete="email"
             autoFocus
             required
             fullWidth
-            variant="outlined"
-            color={emailError ? "error" : "primary"}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </FormControl>
         <FormControl>
@@ -147,18 +131,17 @@ export default function SignInCard() {
             </Link>
           </Box>
           <TextField
-            error={passwordError}
-            helperText={passwordErrorMessage}
+            error={!!passwordError}
+            helperText={passwordError}
+            id="password"
+            type="password"
             name="password"
             placeholder="••••••"
-            type="password"
-            id="password"
             autoComplete="current-password"
-            autoFocus
             required
             fullWidth
-            variant="outlined"
-            color={passwordError ? "error" : "primary"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </FormControl>
         <FormControlLabel
@@ -166,12 +149,7 @@ export default function SignInCard() {
           label="Remember me"
         />
         <ForgotPassword open={open} handleClose={handleClose} />
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          onClick={validateInputs}
-        >
+        <Button type="submit" fullWidth variant="contained">
           Sign in
         </Button>
         <Typography sx={{ textAlign: "center" }}>
