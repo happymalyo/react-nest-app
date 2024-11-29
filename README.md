@@ -27,6 +27,7 @@ react-nest-project/
 ├── .dockerignore # Docker ignore file (to exclude unnecessary files)
 └── README.md # Project documentation
 
-### Database access
+### Commands
 
-> sudo docker exec -it mariadb mariadb -u mario -p
+> sudo docker exec -it mariadb mariadb -u admin -p
+> docker build -t my-react-app .

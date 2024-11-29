@@ -6,6 +6,7 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
+import { Link } from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -90,12 +91,17 @@ export default function Layout({
         <List>
           {["Users", "Articles"].map((text, index) => (
             <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <UsersIcon /> : <ArticleIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
+              <Link
+                to={index === 0 ? "/app/users" : "/app/articles"}
+                style={{ textDecoration: "none", width: "100%" }}
+              >
+                <ListItemButton>
+                  <ListItemIcon>
+                    {index % 2 === 0 ? <UsersIcon /> : <ArticleIcon />}
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItemButton>
+              </Link>
             </ListItem>
           ))}
         </List>
