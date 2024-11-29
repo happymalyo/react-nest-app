@@ -25,7 +25,7 @@ function User() {
   const [users, setUsers] = useState([]); // Liste des utilisateurs
   const [loading, setLoading] = useState(true); // Indicateur de chargement
   const [error, setError] = useState("");
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
 
   const getUsers = async () => {
     try {
@@ -63,12 +63,17 @@ function User() {
       >
         <Typography variant="h4">Utilisateurs</Typography>
         <Box sx={{ display: "flex", gap: 1 }}>
-          <Button startIcon={<ImportExportIcon />}>Import</Button>
-          <Button startIcon={<ImportExportIcon />}>Export</Button>
+          <Button startIcon={<ImportExportIcon />} disabled>
+            Import
+          </Button>
+          <Button startIcon={<ImportExportIcon />} disabled>
+            Export
+          </Button>
           <Button
             variant="contained"
             startIcon={<AddIcon />}
             sx={{ textTransform: "none" }}
+            disabled
           >
             Add user
           </Button>

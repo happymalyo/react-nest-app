@@ -11,9 +11,12 @@ import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import ForgotPassword from "./ForgotPassword";
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from "../ui/CustomIcons";
 import { toast } from "react-toastify";
+import { register } from "../../services/authService";
+import { validateEmail, validatePassword } from "../../utils/authUtils";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -33,69 +36,45 @@ const Card = styled(MuiCard)(({ theme }) => ({
   }),
 }));
 
-export default function SignUpard() {
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
-  const [open, setOpen] = React.useState(false);
+export default function SignUpCard() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [confirmPasswordError, setConfirmPasswordError] = useState<
+    string | null
+  >(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+    const emailValidation = validateEmail(email);
+    const passwordValidation = validatePassword(password);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (emailError || passwordError) {
-      toast.error(`${emailErrorMessage} \n ${passwordErrorMessage}`, {
-        position: "top-right",
-        autoClose: 5000,
-      });
-      event.preventDefault();
+    setEmailError(emailValidation || null);
+    setPasswordError(passwordValidation || null);
+    setConfirmPasswordError(
+      password !== confirmPassword ? "Passwords do not match" : null
+    );
+
+    if (emailValidation || passwordValidation || password !== confirmPassword) {
+      toast.error("Please fix the errors before submitting.");
       return;
     }
 
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-
-    toast.success("Connexion reussie", {
-      position: "top-right",
-      autoClose: 5000,
-    });
-    event.preventDefault();
-  };
-
-  const validateInputs = () => {
-    const email = document.getElementById("email") as HTMLInputElement;
-    const password = document.getElementById("password") as HTMLInputElement;
-
-    let isValid = true;
-
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage("Please enter a valid email address.");
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage("");
+    try {
+      setLoading(true);
+      await register(email, password); // Call register function from authService
+      toast.success("Sign-up successful!");
+      navigate("/login"); // Redirect to login page after successful registration
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
-
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage("Password must be at least 6 characters long.");
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage("");
-    }
-
-    return isValid;
   };
 
   return (
@@ -108,7 +87,7 @@ export default function SignUpard() {
         variant="h4"
         sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
       >
-        Sign in
+        Sign up
       </Typography>
       <Box
         component="form"
@@ -119,72 +98,64 @@ export default function SignUpard() {
         <FormControl>
           <FormLabel htmlFor="email">Email</FormLabel>
           <TextField
-            error={emailError}
-            helperText={emailErrorMessage}
+            error={!!emailError}
+            helperText={emailError}
             id="email"
             type="email"
-            name="username"
+            name="email"
             placeholder="your@email.com"
             autoComplete="email"
             autoFocus
             required
             fullWidth
-            variant="outlined"
-            color={emailError ? "error" : "primary"}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </FormControl>
         <FormControl>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <FormLabel htmlFor="password">Password</FormLabel>
-            <Link
-              component="button"
-              type="button"
-              onClick={handleClickOpen}
-              variant="body2"
-              sx={{ alignSelf: "baseline" }}
-            >
-              Forgot your password?
-            </Link>
-          </Box>
+          <FormLabel htmlFor="password">Password</FormLabel>
           <TextField
-            error={passwordError}
-            helperText={passwordErrorMessage}
+            error={!!passwordError}
+            helperText={passwordError}
+            id="password"
+            type="password"
             name="password"
             placeholder="••••••"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            autoFocus
+            autoComplete="new-password"
             required
             fullWidth
-            variant="outlined"
-            color={passwordError ? "error" : "primary"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </FormControl>
+        <FormControl>
+          <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
+          <TextField
+            error={!!confirmPasswordError}
+            helperText={confirmPasswordError}
+            id="confirmPassword"
+            type="password"
+            name="confirmPassword"
+            placeholder="••••••"
+            autoComplete="new-password"
+            required
+            fullWidth
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </FormControl>
         <FormControlLabel
           control={<Checkbox value="remember" color="primary" />}
-          label="Remember me"
+          label="I agree to the terms and conditions"
         />
-        <ForgotPassword open={open} handleClose={handleClose} />
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          onClick={validateInputs}
-        >
-          Sign in
+        <Button type="submit" fullWidth variant="contained" disabled={loading}>
+          {loading ? "Registering..." : "Sign up"}
         </Button>
         <Typography sx={{ textAlign: "center" }}>
-          Don&apos;t have an account?{" "}
-          <span>
-            <Link
-              href="/material-ui/getting-started/templates/sign-in/"
-              variant="body2"
-              sx={{ alignSelf: "center" }}
-            >
-              Sign up
-            </Link>
-          </span>
+          Already have an account?{" "}
+          <Link href="/login" variant="body2" sx={{ alignSelf: "center" }}>
+            Sign in
+          </Link>
         </Typography>
       </Box>
       <Divider>or</Divider>
@@ -192,18 +163,18 @@ export default function SignUpard() {
         <Button
           fullWidth
           variant="outlined"
-          onClick={() => alert("Sign in with Google")}
+          onClick={() => alert("Sign up with Google")}
           startIcon={<GoogleIcon />}
         >
-          Sign in with Google
+          Sign up with Google
         </Button>
         <Button
           fullWidth
           variant="outlined"
-          onClick={() => alert("Sign in with Facebook")}
+          onClick={() => alert("Sign up with Facebook")}
           startIcon={<FacebookIcon />}
         >
-          Sign in with Facebook
+          Sign up with Facebook
         </Button>
       </Box>
     </Card>

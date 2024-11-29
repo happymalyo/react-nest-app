@@ -7,6 +7,7 @@ import {
   TextField,
   Typography,
   DialogActions,
+  Card,
 } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -67,55 +68,57 @@ const ArticleForm = () => {
   };
 
   return (
-    <Box sx={{ padding: 10, marginTop: 20, maxWidth: 600, margin: "0 auto" }}>
-      <Typography variant="h4">
-        {id ? "Edit Article" : "Add Article"}
-      </Typography>
-      {error && <Typography color="error">{error}</Typography>}
-      <form onSubmit={handleSubmit}>
-        <Box sx={{ mt: 3 }}>
-          <TextField
-            label="Article Name"
-            name="nom_article"
-            value={form.nom_article}
-            onChange={handleChange}
-            fullWidth
-            required
-            margin="normal"
-          />
-          <TextField
-            label="Quantity"
-            name="quantity"
-            type="number"
-            value={form.quantity}
-            onChange={handleChange}
-            fullWidth
-            required
-            margin="normal"
-          />
-        </Box>
+    <Card variant="outlined">
+      <Box sx={{ padding: 10, marginTop: 20, maxWidth: 600, margin: "0 auto" }}>
+        <Typography sx={{textAlign: "center"}} variant="h4">
+          {id ? "Edit Article" : "Add Article"}
+        </Typography>
+        {error && <Typography color="error">{error}</Typography>}
+        <form onSubmit={handleSubmit}>
+          <Box sx={{ mt: 3 }}>
+            <TextField
+              label="Article Name"
+              name="nom_article"
+              value={form.nom_article}
+              onChange={handleChange}
+              fullWidth
+              required
+              margin="normal"
+            />
+            <TextField
+              label="Quantity"
+              name="quantity"
+              type="number"
+              value={form.quantity}
+              onChange={handleChange}
+              fullWidth
+              required
+              margin="normal"
+            />
+          </Box>
 
-        <DialogActions sx={{ mt: 3 }}>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<SaveIcon />}
-            type="submit"
-            disabled={loading}
-          >
-            {loading ? "Saving..." : "Save"}
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            startIcon={<CancelIcon />}
-            onClick={() => navigate("/app/articles")}
-          >
-            Cancel
-          </Button>
-        </DialogActions>
-      </form>
-    </Box>
+          <DialogActions sx={{ mt: 3 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<SaveIcon />}
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? "Saving..." : "Save"}
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              startIcon={<CancelIcon />}
+              onClick={() => navigate("/app/articles")}
+            >
+              Cancel
+            </Button>
+          </DialogActions>
+        </form>
+      </Box>
+    </Card>
   );
 };
 

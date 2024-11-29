@@ -20,6 +20,9 @@ import Tooltip from "@mui/material/Tooltip";
 import { Bell as BellIcon } from "@phosphor-icons/react/dist/ssr/Bell";
 import { Users as UsersIcon } from "@phosphor-icons/react/dist/ssr/Users";
 import ArticleIcon from "@mui/icons-material/Article";
+import { useNavigate } from "react-router-dom";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { logout } from "../../services/authService";
 
 const drawerWidth = 240;
 export interface LayoutProps {
@@ -29,6 +32,12 @@ export interface LayoutProps {
 export default function Layout({
   children,
 }: LayoutProps): React.JSX.Element | null {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout(); // Remove the token from localStorage
+    navigate("/login"); // Redirect to login page
+  };
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -70,6 +79,11 @@ export default function Layout({
                 </Badge>
               </Tooltip>
               <Avatar src="/assets/avatar.png" sx={{ cursor: "pointer" }} />
+              <Tooltip title="Logout">
+                <IconButton onClick={handleLogout}>
+                  <LogoutIcon />
+                </IconButton>
+              </Tooltip>
             </Stack>
           </Stack>
         </Box>

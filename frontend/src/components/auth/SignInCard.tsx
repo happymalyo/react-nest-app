@@ -15,7 +15,7 @@ import ForgotPassword from "./ForgotPassword";
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from "../ui/CustomIcons";
 import { toast } from "react-toastify";
 import { login } from "../../services/authService";
-import { validateEmail, validatePassword } from "../../utils/authUtils";
+import { validateEmail } from "../../utils/authUtils";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -57,15 +57,11 @@ export default function SignInCard() {
     event.preventDefault();
 
     const emailValidation = validateEmail(email);
-    const passwordValidation = validatePassword(password);
 
     if (emailValidation) setEmailError(emailValidation);
     else setEmailError(null);
 
-    if (passwordValidation) setPasswordError(passwordValidation);
-    else setPasswordError(null);
-
-    if (emailValidation || passwordValidation) {
+    if (emailValidation) {
       toast.error("Please fix the errors before submitting.");
       return;
     }

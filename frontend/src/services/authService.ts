@@ -33,3 +33,25 @@ export const getAuthToken = (): string | null => {
 export const logout = (): void => {
   localStorage.removeItem("authToken");
 };
+
+// Function to handle registration
+export const register = async (
+  username: string,
+  password: string
+): Promise<{ username: string; id: number }> => {
+  try {
+    const response = await axios.post(`${API_URL}/auth/register`, {
+      username,
+      password,
+    });
+
+    // Destructure the response to get username and id
+    const { username: user, id } = response.data;
+
+    return { username: user, id };
+  } catch (error: any) {
+    const message =
+      error.response?.data?.message || "Registration failed. Please try again.";
+    throw new Error(message);
+  }
+};
