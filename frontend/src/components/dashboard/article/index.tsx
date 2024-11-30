@@ -26,6 +26,8 @@ import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function Article() {
   const [articles, setArticles] = useState<any[]>([]);
@@ -37,6 +39,7 @@ function Article() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [error, setError] = useState("");
   const token = localStorage.getItem("authToken");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadArticles = async () => {
@@ -53,6 +56,9 @@ function Article() {
 
     if (token) {
       loadArticles();
+    } else {
+      toast.error("Please, signin");
+      navigate("/login");
     }
   }, [token]);
 

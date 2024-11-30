@@ -9,6 +9,7 @@ import Layout from "./components/dashboard/Layout";
 import Article from "./components/dashboard/article";
 import User from "./components/dashboard/users";
 import ArticleForm from "./components/dashboard/article/ArticleForm";
+import ProtectedRoute from "./utils/ProtectedRoute";
 
 import "./App.css";
 
@@ -21,11 +22,14 @@ function App() {
           <Route
             path="/"
             element={
-              <Layout>
-                <Home />
-              </Layout>
+              <ProtectedRoute>
+                <Layout>
+                  <Home />
+                </Layout>
+              </ProtectedRoute>
             }
           />
+
           <Route
             path="/app/articles"
             element={
@@ -61,9 +65,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
         </Routes>
+        <ToastContainer position="top-right" />
       </div>
-
-      <ToastContainer />
     </Router>
   );
 }
