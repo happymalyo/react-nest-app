@@ -48,14 +48,15 @@ $ npm install
 
 ### 3. Commandes Docker
 
+Voici les commandes pour générer les tables dans <code>/mariadb/init.sql</code>.
 Pour démarrer et gérer les containers Docker du projet, voici les commandes principales :
 
 Arrêter et supprimer les containers en cours :
 
 ```bash
 $ docker compose down # stopper les container en cours
-$ docker compose down -v #Supprime les containers et les volumes associés.
-$ docker compose up -d --build # Démarre les services en arrière-plan
+$ docker compose down -v # Supprime les containers et les volumes associés.
+$ docker compose up -d --build # Generer les tables et demarrer les services
 ```
 
 - <code>--build</code> : Ce commande force la reconstruction des images Docker avant de démarrer les services.
