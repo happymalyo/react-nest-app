@@ -28,9 +28,16 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { fetchData } from "../../../api/userApi";
+
+interface Article {
+  iid_articled: number;
+  nom_article: string;
+  quantity: number;
+}
 
 function Article() {
-  const [articles, setArticles] = useState<any[]>([]);
+  const [articles, setArticles] = useState<Article[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [articleToDelete, setArticleToDelete] = useState<number | null>(null);
@@ -45,10 +52,14 @@ function Article() {
     const loadArticles = async () => {
       setLoading(true);
       try {
-        const data = await fetchArticles(token || "");
-        setArticles(data);
+        const result = await fetchData<Article[]>("users");
+        if (typeof result == "string") {
+          setError(result);
+        } else {
+          setArticles(result || []);
+        }
       } catch (err: any) {
-        setError(err.message);
+        setError("Session expiré. Please log out and Sign in..");
       } finally {
         setLoading(false);
       }
@@ -158,7 +169,9 @@ function Article() {
       {loading ? (
         <Typography>Loading...</Typography>
       ) : error ? (
-        <Typography color="error">{error}</Typography>
+        <Typography color="error" sx={{ textAlign: "center" }}>
+          {error}
+        </Typography>
       ) : (
         <TableContainer component={Paper}>
           <Table>
@@ -235,13 +248,17 @@ function Article() {
           mt: 5,
         }}
       >
-        <Typography variant="body2">Rows per page: 5</Typography>
-        <Pagination
-          count={totalPages}
-          page={currentPage}
-          onChange={handlePageChange}
-          color="primary"
-        />
+        {articles?.length > 0 && (
+          <>
+            <Typography variant="body2">Rows per page: 5</Typography>
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={handlePageChange}
+              color="primary"
+            />
+          </>
+        )}
       </Box>
     </Box>
   );

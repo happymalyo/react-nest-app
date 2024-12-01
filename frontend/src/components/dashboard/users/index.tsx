@@ -11,18 +11,22 @@ import {
   TableRow,
   Paper,
   Typography,
-  Pagination,
   CircularProgress,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import AddIcon from "@mui/icons-material/Add";
-import { fetchUsers } from "../../../api/userApi";
+import { fetchData } from "../../../api/userApi";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
+interface User {
+  id: number;
+  username: string;
+}
+
 function User() {
-  const [users, setUsers] = useState([]); // Liste des utilisateurs
+  const [users, setUsers] = useState<User[]>([]); // Liste des utilisateurs
   const [loading, setLoading] = useState(true); // Indicateur de chargement
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -36,9 +40,13 @@ function User() {
         navigate("/login");
         throw new Error("Token manquant. Veuillez vous connecter.");
       }
-      console.log("token", token);
-      const data = await fetchUsers(token); // Appelle la fonction API
-      setUsers(data); // Met à jour l'état des utilisateurs
+      const result = await fetchData<User[]>("users");
+      if (typeof result == "string") {
+        setError(result);
+      } else {
+        setUsers(result || []);
+      }
+
       setLoading(false);
     } catch (err: any) {
       setError(err.message);
@@ -134,10 +142,7 @@ function User() {
           alignItems: "center",
           mt: 5,
         }}
-      >
-        <Typography variant="body2">Rows per page: 5</Typography>
-        <Pagination count={5} color="primary" />
-      </Box>
+      ></Box>
     </Box>
   );
 }
