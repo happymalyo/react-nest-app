@@ -28,14 +28,14 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { fetchData, deleteData } from "../../../api/crud-api";
 
-interface Article {
+interface IArticle {
   iid_articled: number;
   nom_article: string;
   quantity: number;
 }
 
 function Article() {
-  const [articles, setArticles] = useState<Article[]>([]);
+  const [articles, setArticles] = useState<IArticle[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [articleToDelete, setArticleToDelete] = useState<number | null>(null);
@@ -48,7 +48,7 @@ function Article() {
 
   const refreshArticle = async () => {
     try {
-      const result = await fetchData<Article[]>("articles");
+      const result = await fetchData<IArticle[]>("articles");
       if (typeof result == "string") {
         setError(result);
       } else {

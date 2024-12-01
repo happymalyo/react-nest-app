@@ -20,13 +20,13 @@ import { fetchData } from "../../../api/crud-api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-interface User {
+interface IUser {
   id: number;
   username: string;
 }
 
 function User() {
-  const [users, setUsers] = useState<User[]>([]); // Liste des utilisateurs
+  const [users, setUsers] = useState<IUser[]>([]); // Liste des utilisateurs
   const [loading, setLoading] = useState(true); // Indicateur de chargement
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ function User() {
         toast.error("");
         navigate("/login");
       }
-      const result = await fetchData<User[]>("users");
+      const result = await fetchData<IUser[]>("users");
       if (typeof result == "string") {
         setError(result);
       } else {
