@@ -9,6 +9,7 @@ import * as path from 'path';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { ArticlesModule } from './articles/articles.module';
+import { JwtStrategy } from './auth/strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { ArticlesModule } from './articles/articles.module';
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    JwtStrategy,
   ],
 })
 export class AppModule {}

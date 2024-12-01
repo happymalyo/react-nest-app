@@ -11,6 +11,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   // in our JWT Strategy, we called the validate method after the token's validity has been confirmed.
   async validate(username: string, password: string): Promise<any> {
     const user = await this.authService.validateUser({ username, password });
+
     if (!user) {
       throw new UnauthorizedException();
     }
