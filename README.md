@@ -59,7 +59,7 @@ $ docker compose down -v # Supprime les containers et les volumes associés.
 $ docker compose up -d --build # Generer les tables et demarrer les services
 ```
 
-- <code>--build</code> : Ce commande force la reconstruction des images Docker avant de démarrer les services.
+- <code>--build</code> : Cette commande force la reconstruction des images Docker avant de démarrer les services.
 
 ### 4. Accéder à l'application sur le navigateur :
 
