@@ -13,7 +13,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   useEffect(() => {
     const validateToken = async () => {
       if (!token) {
-        toast.error("Hey, Please Sign in");
+        toast.error("Veuillez  vous connecter s'il vous plaît.");
         setIsValid(false);
         return;
       }
@@ -28,7 +28,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
         if (response.ok) {
           setIsValid(true);
         } else {
-          toast.error("Hey, Please Sign in");
+          toast.error("Veuillez  vous connecter s'il vous plaît.");
           setIsValid(false);
         }
       } catch {

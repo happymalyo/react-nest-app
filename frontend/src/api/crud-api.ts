@@ -1,6 +1,7 @@
 import { fetchAPI, postAPI, deleteAPI } from "../utils/api-helper";
 
-// Fonction pour récupérer les utilisateurs
+// This file contains the fonctions to handle CRUD in rest api request
+// If the token does not exist, the request will be unauthorized
 export const fetchData = async <T>(
   pathname: string
 ): Promise<T | string | undefined> => {

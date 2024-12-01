@@ -2,7 +2,7 @@ import { IsEmail, IsString, MinLength } from 'class-validator';
 
 // For better exprience, this verfication has handled from Frented React.
 export class CreateUserDto {
-  @IsEmail({}, { message: 'Mette de valide adresse email' })
+  @IsEmail({}, { message: 'Mettez de valide adresse email' })
   username: string;
 
   @IsString()

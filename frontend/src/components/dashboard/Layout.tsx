@@ -79,7 +79,7 @@ export default function Layout({
                 </Badge>
               </Tooltip>
               <Avatar src="/assets/avatar.png" sx={{ cursor: "pointer" }} />
-              <Tooltip title="Logout">
+              <Tooltip title="Se deconnecter">
                 <IconButton onClick={handleLogout}>
                   <LogoutIcon />
                 </IconButton>
@@ -103,7 +103,7 @@ export default function Layout({
         <Toolbar />
         <Divider />
         <List>
-          {["Users", "Articles"].map((text, index) => (
+          {["Utilisateurs", "Articles"].map((text, index) => (
             <ListItem key={text} disablePadding>
               <Link
                 to={index === 0 ? "/app/users" : "/app/articles"}

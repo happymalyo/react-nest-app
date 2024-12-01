@@ -2,12 +2,9 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import MuiCard from "@mui/material/Card";
-import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
@@ -57,18 +54,18 @@ export default function SignUpCard() {
     setEmailError(emailValidation || null);
     setPasswordError(passwordValidation || null);
     setConfirmPasswordError(
-      password !== confirmPassword ? "Passwords do not match" : null
+      password !== confirmPassword ? "Mot de passe doit être identique" : null
     );
 
     if (emailValidation || passwordValidation || password !== confirmPassword) {
-      toast.error("Please fix the errors before submitting.");
+      toast.error("Mot de passe ou email erroné");
       return;
     }
 
     try {
       setLoading(true);
       await register(email, password); // Call register function from authService
-      toast.success("Sign-up successful!");
+      toast.success("Inscription reussie!");
       navigate("/login"); // Redirect to login page after successful registration
     } catch (error: any) {
       toast.error(error.message);
@@ -87,7 +84,7 @@ export default function SignUpCard() {
         variant="h4"
         sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
       >
-        Sign up
+        S'inscrire
       </Typography>
       <Box
         component="form"
@@ -113,7 +110,7 @@ export default function SignUpCard() {
           />
         </FormControl>
         <FormControl>
-          <FormLabel htmlFor="password">Password</FormLabel>
+          <FormLabel htmlFor="password">Mot de passe</FormLabel>
           <TextField
             error={!!passwordError}
             helperText={passwordError}
@@ -129,7 +126,9 @@ export default function SignUpCard() {
           />
         </FormControl>
         <FormControl>
-          <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
+          <FormLabel htmlFor="confirmPassword">
+            Confirmer le mot de passe
+          </FormLabel>
           <TextField
             error={!!confirmPasswordError}
             helperText={confirmPasswordError}
@@ -137,25 +136,21 @@ export default function SignUpCard() {
             type="password"
             name="confirmPassword"
             placeholder="••••••"
-            autoComplete="off"
+            autoComplete="new-password"
             required
             fullWidth
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </FormControl>
-        <FormControlLabel
-          control={<Checkbox value="remember" color="primary" />}
-          label="I agree to the terms and conditions"
-        />
         <Button type="submit" fullWidth variant="contained" disabled={loading}>
-          {loading ? "Registering..." : "Sign up"}
+          {loading ? "Inscription en cours..." : "Sign up"}
         </Button>
         <Typography sx={{ textAlign: "center" }}>
-          Already have an account?{" "}
-          <Link href="/login" variant="body2" sx={{ alignSelf: "center" }}>
-            Sign in
-          </Link>
+          Vous avez déjà de compte ?{" "}
+          <Button onClick={() => navigate("/login")} sx={{ cursor: "pointer" }}>
+            Se connecter
+          </Button>
         </Typography>
       </Box>
       <Divider>or</Divider>
@@ -163,18 +158,18 @@ export default function SignUpCard() {
         <Button
           fullWidth
           variant="outlined"
-          onClick={() => alert("Sign up with Google")}
+          onClick={() => alert("S'inscrire avec Google")}
           startIcon={<GoogleIcon />}
         >
-          Sign up with Google
+          S'inscrire avec Google
         </Button>
         <Button
           fullWidth
           variant="outlined"
-          onClick={() => alert("Sign up with Facebook")}
+          onClick={() => alert("S'inscrire avec Facebook")}
           startIcon={<FacebookIcon />}
         >
-          Sign up with Facebook
+          S'inscrire avec Facebook
         </Button>
       </Box>
     </Card>

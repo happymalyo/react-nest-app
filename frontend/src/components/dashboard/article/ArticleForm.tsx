@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import { fetchData, postData } from "../../../api/crud-api";
 
 import {
@@ -23,7 +22,6 @@ const ArticleForm = () => {
   const [error, setError] = useState("");
   const { id } = useParams(); // For editing an article
   const navigate = useNavigate();
-  const token = "your-auth-token"; // Replace with actual token logic
 
   useEffect(() => {
     if (id) {
@@ -37,7 +35,7 @@ const ArticleForm = () => {
         }
       });
     }
-  }, [id, token]);
+  }, [id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -68,13 +66,13 @@ const ArticleForm = () => {
     <Card variant="outlined">
       <Box sx={{ padding: 10, marginTop: 20, maxWidth: 600, margin: "0 auto" }}>
         <Typography sx={{ textAlign: "center" }} variant="h4">
-          {id ? "Edit Article" : "Add Article"}
+          {id ? "Modifier un article" : "Ajouter un Article"}
         </Typography>
         {error && <Typography color="error">{error}</Typography>}
         <form onSubmit={handleSubmit}>
           <Box sx={{ mt: 3 }}>
             <TextField
-              label="Article Name"
+              label="Nom de l'article"
               name="nom_article"
               value={form.nom_article}
               onChange={handleChange}
@@ -83,7 +81,7 @@ const ArticleForm = () => {
               margin="normal"
             />
             <TextField
-              label="Quantity"
+              label="Quantité"
               name="quantity"
               type="number"
               value={form.quantity}
@@ -102,7 +100,7 @@ const ArticleForm = () => {
               type="submit"
               disabled={loading}
             >
-              {loading ? "Saving..." : "Save"}
+              {loading ? "Enregistrement en cours..." : "Enregister"}
             </Button>
             <Button
               variant="outlined"
@@ -110,7 +108,7 @@ const ArticleForm = () => {
               startIcon={<CancelIcon />}
               onClick={() => navigate("/app/articles")}
             >
-              Cancel
+              Annuler
             </Button>
           </DialogActions>
         </form>

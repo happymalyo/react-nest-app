@@ -1,4 +1,11 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
@@ -24,6 +31,11 @@ export class AuthController {
   @Public()
   @Post('register')
   async register(@Body() body: CreateUserDto) {
+    // Vérifier si l'utilisateur existe déjà
+    const existingUser = await this.usersService.findByUsername(body.username);
+    if (existingUser) {
+      throw new BadRequestException('Utilisateur existe déjà');
+    }
     const user = await this.usersService.create(body);
     return user;
   }

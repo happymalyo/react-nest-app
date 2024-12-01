@@ -2,11 +2,9 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import MuiCard from "@mui/material/Card";
-import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -62,17 +60,17 @@ export default function SignInCard() {
     else setEmailError(null);
 
     if (emailValidation) {
-      toast.error("Please fix the errors before submitting.");
+      toast.error("Verifier votre email ou mot de passe");
       return;
     }
 
     try {
       await login(email, password);
-      toast.success("Sign-in successful!");
+      toast.success("Authentification reussie!");
       // Redirect to /app
       navigate("/");
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error("Verifier votre email ou mot de passe");
     }
   };
 
@@ -86,7 +84,7 @@ export default function SignInCard() {
         variant="h4"
         sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
       >
-        Sign in
+        Se connecter
       </Typography>
       <Box
         component="form"
@@ -113,7 +111,7 @@ export default function SignInCard() {
         </FormControl>
         <FormControl>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <FormLabel htmlFor="password">Password</FormLabel>
+            <FormLabel htmlFor="password">Mot de passe</FormLabel>
             <Link
               component="button"
               type="button"
@@ -121,7 +119,7 @@ export default function SignInCard() {
               variant="body2"
               sx={{ alignSelf: "baseline" }}
             >
-              Forgot your password?
+              Avez-vous oublié votre mot de passe ?
             </Link>
           </Box>
           <TextField
@@ -138,44 +136,39 @@ export default function SignInCard() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </FormControl>
-        <FormControlLabel
-          control={<Checkbox value="remember" color="primary" />}
-          label="Remember me"
-        />
         <ForgotPassword open={open} handleClose={handleClose} />
         <Button type="submit" fullWidth variant="contained">
-          Sign in
+          Se connecter
         </Button>
         <Typography sx={{ textAlign: "center" }}>
-          Don&apos;t have an account?{" "}
+          Vous n'avez pas de compte ?{" "}
           <span>
-            <Link
-              href="/material-ui/getting-started/templates/sign-in/"
-              variant="body2"
-              sx={{ alignSelf: "center" }}
+            <Button
+              onClick={() => navigate("/signup")}
+              sx={{ cursor: "pointer" }}
             >
-              Sign up
-            </Link>
+              S'inscrire
+            </Button>
           </span>
         </Typography>
       </Box>
-      <Divider>or</Divider>
+      <Divider>ou</Divider>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         <Button
           fullWidth
           variant="outlined"
-          onClick={() => alert("Sign in with Google")}
+          onClick={() => alert("Se connecter avec Google")}
           startIcon={<GoogleIcon />}
         >
-          Sign in with Google
+          Se connecter avec Google
         </Button>
         <Button
           fullWidth
           variant="outlined"
-          onClick={() => alert("Sign in with Facebook")}
+          onClick={() => alert("Se connecter avec Facebook")}
           startIcon={<FacebookIcon />}
         >
-          Sign in with Facebook
+          Se connecter avec Facebook
         </Button>
       </Box>
     </Card>

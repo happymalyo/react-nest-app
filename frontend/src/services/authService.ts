@@ -40,7 +40,7 @@ export const register = async (
   password: string
 ): Promise<{ username: string; id: number }> => {
   try {
-    const response = await axios.post(`${API_URL}/auth/register`, {
+    const response = await axios.post(`${API_URL}auth/register`, {
       username,
       password,
     });

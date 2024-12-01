@@ -70,7 +70,7 @@ function Article() {
     if (token) {
       loadArticles();
     } else {
-      toast.error("Please, signin");
+      toast.error("Veuillez  vous connecter s'il vous plaît.");
       navigate("/login");
     }
   }, [token]);
@@ -96,9 +96,9 @@ function Article() {
         await deleteData(`articles/${articleToDelete}`);
         // Refresh the articles list after deletion
         await refreshArticle();
-        toast.success("Article deleted successfully.");
+        toast.success("Suppression d'article effectuée");
       } catch (error) {
-        setError("Failed to delete article.");
+        setError("Erreur de trouver l'article");
       }
       setOpenDeleteDialog(false);
     }
@@ -151,7 +151,7 @@ function Article() {
           component={Link} // This will turn the button into a link
           to="/app/articles/add" // Path for adding a new article
         >
-          Add Article
+          Ajouter un Article
         </Button>
       </Box>
 
@@ -159,7 +159,7 @@ function Article() {
       <Box sx={{ display: "flex", alignItems: "center", mb: 5 }}>
         <TextField
           variant="outlined"
-          placeholder="Search article"
+          placeholder="Chercher le nom de l'article"
           size="small"
           InputProps={{
             startAdornment: <SearchIcon sx={{ mr: 1 }} />,
@@ -181,8 +181,8 @@ function Article() {
             <TableHead>
               <TableRow>
                 <TableCell>ID</TableCell>
-                <TableCell>Article Name</TableCell>
-                <TableCell>Quantity</TableCell>
+                <TableCell>Nom de l'article</TableCell>
+                <TableCell>Quantité</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -220,9 +220,9 @@ function Article() {
 
       {/* Confirmation Dialog for Deleting Article */}
       <Dialog open={openDeleteDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Delete Article</DialogTitle>
+        <DialogTitle>Supprimer Article</DialogTitle>
         <DialogContent>
-          <p>Are you sure you want to delete this article?</p>
+          <p>Voulez vous supprimer cet article ?</p>
         </DialogContent>
         <DialogActions>
           <Button
@@ -230,14 +230,14 @@ function Article() {
             color="primary"
             disabled={loading}
           >
-            Cancel
+            Annuler
           </Button>
           <Button
             onClick={handleConfirmDelete}
             color="secondary"
             disabled={loading}
           >
-            {loading ? "Deleting..." : "Delete"}
+            {loading ? "Suppression en cours..." : "Supprimer"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -253,7 +253,7 @@ function Article() {
       >
         {articles?.length > 0 && (
           <>
-            <Typography variant="body2">Rows per page: 5</Typography>
+            <Typography variant="body2">Nombre par page: 5</Typography>
             <Pagination
               count={totalPages}
               page={currentPage}

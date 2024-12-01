@@ -36,9 +36,8 @@ function User() {
       setLoading(true);
       const token = localStorage.getItem("authToken"); // Récupère le token du localStorage
       if (!token) {
-        toast.error("Please fix the errors before submitting.");
+        toast.error("");
         navigate("/login");
-        throw new Error("Token manquant. Veuillez vous connecter.");
       }
       const result = await fetchData<User[]>("users");
       if (typeof result == "string") {
@@ -83,7 +82,7 @@ function User() {
             sx={{ textTransform: "none" }}
             disabled
           >
-            Add user
+            Ajouter utilisateur
           </Button>
         </Box>
       </Box>
