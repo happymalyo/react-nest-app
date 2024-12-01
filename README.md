@@ -6,7 +6,7 @@
 
 Ce projet utilise les technologies suivantes :
 
-- **React.js v18.3** pour le frontend
+- **React.js v18.3** & **Material UI** pour le frontend
 - **NestJS v10** pour le backend
 - **Node.js 21** pour l'environnement d'exécution
 
