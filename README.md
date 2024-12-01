@@ -22,6 +22,12 @@ Clonez le projet avec :
 $ git clone git@github.com:happymalyo/react-nest-app.git
 ```
 
+Maintenant, renommer le fichier <code>.env.example</code> dans le root en <code>.env </code> et changez ses valeurs.</br>
+
+```bash
+$ mv .env.example .env
+```
+
 ### 2. Installation des dépendances
 
 Une fois le projet cloné, allez dans le projet avec <code>cd react-nest-app</code> puis installer les dépendances pour le frontend et le backend.
