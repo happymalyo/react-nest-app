@@ -1,4 +1,69 @@
-### Commands
+## <p align="center"> Documentation du Projet 👨‍💻</p>
 
-> sudo docker exec -it mariadb mariadb -u admin -p
-> docker build -t my-react-app .
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+</p>
+
+Ce projet utilise les technologies suivantes :
+
+- **React.js v18.3** pour le frontend
+- **NestJS v10** pour le backend
+- **Node.js 21** pour l'environnement d'exécution
+
+L'objectif du projet est de fournir une application web permettant de gérer des utilisateurs et de réaliser des opérations CRUD à l'aide de **React.js** et **NestJS**. Nous utilisons **MariaDB** comme base de données avec <code>TypeORM</code> accompagné de Docker pour le déploiement et la gestion des services.
+
+### Pour lancer le projet 🚀
+
+### 1. Cloner le projet
+
+Clonez le projet depuis GitHub :
+
+```bash
+$ git clone git@github.com:happymalyo/react-nest-app.git
+```
+
+### 2. Installation des dépendances
+
+Une fois le projet cloné, allez dans le projet avec <code>cd react-nest-app</code> puis installer les dépendances pour le frontend et le backend.
+
+Pour le frontend :
+
+```bash
+$ cd frontend
+$ npm install
+```
+
+Pour le backend :
+
+```bash
+$ cd backend
+$ npm install
+```
+
+### 3. Commandes Docker
+
+Pour démarrer et gérer les containers Docker de votre projet, voici les commandes principales :
+
+Arrêter et supprimer les containers en cours :
+
+```bash
+$ docker compose down # stopper les container en cours
+$ docker compose down -v #Supprime les containers et les volumes associés.
+$ docker compose up -d --build # Démarre les services en arrière-plan
+```
+
+- <code>--build</code> : Force la reconstruction des images Docker avant de démarrer les services.
+
+### 4. Accéder à l'application sur le navigateur :
+
+Une fois les containers démarrés, ouvrez votre navigateur et accédez à http://localhost:3001 pour utiliser l'application.
+
+### 5. Se connecter à la base de données MariaDB :
+
+Vous pouvez vous connecter à la base de données MariaDB via Docker avec la commande suivante (vous aurez besoin du mot de passe qui est dans le fichier <code>.env</code> ) :
+
+```bash
+$ sudo docker exec -it mariadb mariadb -u [username] -p
+```
+
+Enjoy ;)
