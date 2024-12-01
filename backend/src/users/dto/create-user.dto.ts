@@ -1,12 +1,11 @@
-import { IsString } from 'class-validator';
+import { IsEmail, IsString, MinLength } from 'class-validator';
 
+// For better exprience, this verfication has handled from Frented React.
 export class CreateUserDto {
-  @IsString()
-  // @IsUnique(...) check my previous video on how to make such
-  // custom validator as IsUnique doesn't exist in class-validator
+  @IsEmail({}, { message: 'Mette de valide adresse email' })
   username: string;
 
   @IsString()
-  // apply more rules for password as you see fit
+  @MinLength(8, { message: 'Mot de passe doit être au moin 8 caractère' })
   password: string;
 }

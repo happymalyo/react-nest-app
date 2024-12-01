@@ -18,7 +18,8 @@ import { LocalStrategy } from './strategies/local.strategy';
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get('JWT_SECRET'),
-        signOptions: { expiresIn: '60m' },
+        signOptions: { expiresIn: '60m' }, // 1 hour
+        // TODO : create a refresh token when the token is expired for best experience for user
       }),
     }),
     UsersModule,

@@ -43,7 +43,7 @@ export class ArticlesService {
   }
 
   async deleteArticle(id: number): Promise<void> {
-    const article = await this.getArticleById(id); // Ensure the article exists
+    const article = await this.getArticleById(id);
     await this.articleRepository.remove(article);
   }
 }

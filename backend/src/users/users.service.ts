@@ -6,6 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { FindUsersDto } from './dto/find-user.dto';
 import { User } from './entities/user.entity';
 
+// This file contains the CRUD for user
 @Injectable()
 export class UsersService {
   constructor(

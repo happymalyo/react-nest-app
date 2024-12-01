@@ -3,8 +3,6 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
-import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -38,19 +36,5 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
-  }
-
-  async update(id: number, updateAuthDto: UpdateAuthDto): Promise<User> {
-    // Fetch the user by their ID
-    const user = await this.usersService.findOne(id);
-    if (!user) {
-      throw new Error('User not found');
-    }
-
-    // Update only the properties that are provided in the DTO
-    const updatedUser = Object.assign(user, updateAuthDto);
-
-    // Save the updated user back to the database
-    return this.usersService.save(updatedUser);
   }
 }
