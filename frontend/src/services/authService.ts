@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000"; // Replace with your NestJS backend URL
+import { API_URL } from "../constants/config";
 
 // Function to handle login
 export const login = async (
@@ -8,7 +8,7 @@ export const login = async (
   password: string
 ): Promise<string> => {
   try {
-    const response = await axios.post(`${API_URL}/auth/login`, {
+    const response = await axios.post(`${API_URL}auth/login`, {
       username,
       password,
     });

@@ -30,13 +30,13 @@ export async function fetchAPI<T>(path: string, urlParamsObject = {}, options = 
   }
 }
 
-export async function postAPI<T>(path: string, body: T, options = {}) {
+export async function postAPI<T>(path: string, body: any, method: "POST" | "PATCH", options = {}) {
   const url = new URL(path, getStrapiURL());
 
   try {
     // Trigger API call
     const response = await fetch(url, {
-      method: 'POST',
+      method: method,
       ...options,
       body: JSON.stringify({ ...body }),
       cache: 'no-cache',

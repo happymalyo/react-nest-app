@@ -21,14 +21,12 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
-import { fetchArticles } from "../../../api/articleApi";
 import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { fetchData } from "../../../api/userApi";
+import { fetchData, deleteData } from "../../../api/crud-api";
 
 interface Article {
   iid_articled: number;
@@ -48,21 +46,25 @@ function Article() {
   const token = localStorage.getItem("authToken");
   const navigate = useNavigate();
 
+  const refreshArticle = async () => {
+    try {
+      const result = await fetchData<Article[]>("articles");
+      if (typeof result == "string") {
+        setError(result);
+      } else {
+        setArticles(result || []);
+      }
+    } catch (err: any) {
+      setError("Session expiré. Please log out and Sign in..");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     const loadArticles = async () => {
       setLoading(true);
-      try {
-        const result = await fetchData<Article[]>("users");
-        if (typeof result == "string") {
-          setError(result);
-        } else {
-          setArticles(result || []);
-        }
-      } catch (err: any) {
-        setError("Session expiré. Please log out and Sign in..");
-      } finally {
-        setLoading(false);
-      }
+      refreshArticle();
     };
 
     if (token) {
@@ -90,10 +92,11 @@ function Article() {
     if (articleToDelete) {
       try {
         // Perform the delete request
-        await axios.delete(`http://localhost:3000/articles/${articleToDelete}`);
-        // After successful deletion, reload the articles list
-        const updatedArticles = await fetchArticles(token || "");
-        setArticles(updatedArticles);
+        // Await the delete request
+        await deleteData(`articles/${articleToDelete}`);
+        // Refresh the articles list after deletion
+        await refreshArticle();
+        toast.success("Article deleted successfully.");
       } catch (error) {
         setError("Failed to delete article.");
       }

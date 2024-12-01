@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { toast } from "react-toastify";
+import { fetchData, postData } from "../../../api/crud-api";
+
 import {
   Box,
   Button,
@@ -13,7 +15,10 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 
 const ArticleForm = () => {
-  const [form, setForm] = useState({ nom_article: "", quantity: "" });
+  const [form, setForm] = useState<{ nom_article: string; quantity: string }>({
+    nom_article: "",
+    quantity: "",
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { id } = useParams(); // For editing an article
@@ -22,19 +27,15 @@ const ArticleForm = () => {
 
   useEffect(() => {
     if (id) {
-      // If id is present, we're editing an article, so fetch the existing data
-      axios
-        .get(`http://localhost:3000/articles/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((response) => {
-          setForm(response.data);
-        })
-        .catch((err) => {
-          setError(
-            err.response?.data?.message || "Error fetching article data"
-          );
-        });
+      fetchData<{ nom_article: string; quantity: string }>(
+        `articles/${id}`
+      ).then((res) => {
+        if (typeof res == "string") {
+          setError(res);
+        } else {
+          setForm(res || { nom_article: "", quantity: "" });
+        }
+      });
     }
   }, [id, token]);
 
@@ -48,12 +49,8 @@ const ArticleForm = () => {
     setLoading(true);
 
     const apiCall = id
-      ? axios.patch(`http://localhost:3000/articles/${id}`, form, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-      : axios.post("http://localhost:3000/articles", form, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+      ? postData(`articles/${id}`, form, "PATCH")
+      : postData("articles", form, "POST");
 
     apiCall
       .then(() => {
@@ -70,7 +67,7 @@ const ArticleForm = () => {
   return (
     <Card variant="outlined">
       <Box sx={{ padding: 10, marginTop: 20, maxWidth: 600, margin: "0 auto" }}>
-        <Typography sx={{textAlign: "center"}} variant="h4">
+        <Typography sx={{ textAlign: "center" }} variant="h4">
           {id ? "Edit Article" : "Add Article"}
         </Typography>
         {error && <Typography color="error">{error}</Typography>}

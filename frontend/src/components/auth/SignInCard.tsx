@@ -103,7 +103,7 @@ export default function SignInCard() {
             type="email"
             name="email"
             placeholder="your@email.com"
-            autoComplete="email"
+            autoComplete="off"
             autoFocus
             required
             fullWidth
@@ -131,7 +131,7 @@ export default function SignInCard() {
             type="password"
             name="password"
             placeholder="••••••"
-            autoComplete="current-password"
+            autoComplete="off"
             required
             fullWidth
             value={password}

@@ -16,7 +16,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import AddIcon from "@mui/icons-material/Add";
-import { fetchData } from "../../../api/userApi";
+import { fetchData } from "../../../api/crud-api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 

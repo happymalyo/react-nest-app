@@ -104,7 +104,7 @@ export default function SignUpCard() {
             type="email"
             name="email"
             placeholder="your@email.com"
-            autoComplete="email"
+            autoComplete="off"
             autoFocus
             required
             fullWidth
@@ -121,7 +121,7 @@ export default function SignUpCard() {
             type="password"
             name="password"
             placeholder="••••••"
-            autoComplete="new-password"
+            autoComplete="off"
             required
             fullWidth
             value={password}
@@ -137,7 +137,7 @@ export default function SignUpCard() {
             type="password"
             name="confirmPassword"
             placeholder="••••••"
-            autoComplete="new-password"
+            autoComplete="off"
             required
             fullWidth
             value={confirmPassword}
