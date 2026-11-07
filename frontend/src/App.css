@@ -36,3 +36,8 @@
     transform: rotate(360deg);
   }
 }
+:root { color-scheme: light; }
+html { background: #f6f8fb; overscroll-behavior-y: none; }
+body { min-height: 100dvh; }
+.brand-mark { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 11px; background: #3457d5; color: white; font-weight: 800; font-size: 20px; }
+@media (display-mode: standalone) { body { user-select: none; } input, textarea { user-select: text; } }

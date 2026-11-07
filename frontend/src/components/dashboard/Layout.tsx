@@ -1,133 +1,70 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import CssBaseline from "@mui/material/CssBaseline";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
-import { Link } from "react-router-dom";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Avatar from "@mui/material/Avatar";
-import Badge from "@mui/material/Badge";
-import IconButton from "@mui/material/IconButton";
-import Stack from "@mui/material/Stack";
-import Tooltip from "@mui/material/Tooltip";
-import { Bell as BellIcon } from "@phosphor-icons/react/dist/ssr/Bell";
-import { Users as UsersIcon } from "@phosphor-icons/react/dist/ssr/Users";
-import ArticleIcon from "@mui/icons-material/Article";
-import { useNavigate } from "react-router-dom";
-import LogoutIcon from "@mui/icons-material/Logout";
+import { AppBar, Avatar, Badge, Box, BottomNavigation, BottomNavigationAction, CssBaseline, Divider, Drawer, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Stack, Toolbar, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Article, BarChart, ChatBubbleOutline, ForumOutlined, HomeOutlined, Logout, Menu, NotificationsOutlined, PersonOutline, WorkOutline } from "@mui/icons-material";
+import { useLocation, useNavigate } from "react-router-dom";
 import { logout } from "../../services/authService";
+import InstallPrompt from "../pwa/InstallPrompt";
 
-const drawerWidth = 240;
-export interface LayoutProps {
-  children: React.ReactNode;
-}
+const drawerWidth = 264;
+const primaryNavigation = [
+  { label: "Home", path: "/", icon: <HomeOutlined /> },
+  { label: "Discussions", path: "/app/discussions", icon: <ForumOutlined /> },
+  { label: "Jobs", path: "/app/jobs", icon: <WorkOutline /> },
+  { label: "Salaries", path: "/app/salaries", icon: <BarChart /> },
+  { label: "Messages", path: "/app/messages", icon: <ChatBubbleOutline /> },
+  { label: "Profile", path: "/app/profile", icon: <PersonOutline /> },
+];
+const managementNavigation = [
+  { label: "Articles", path: "/app/articles", icon: <Article /> },
+  { label: "Users", path: "/app/users", icon: <PersonOutline /> },
+];
 
-export default function Layout({
-  children,
-}: LayoutProps): React.JSX.Element | null {
+export interface LayoutProps { children: React.ReactNode }
+
+export default function Layout({ children }: LayoutProps): React.JSX.Element {
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
   const navigate = useNavigate();
+  const location = useLocation();
+  const [mobileDrawerOpen, setMobileDrawerOpen] = React.useState(false);
+  const navigateTo = (path: string) => { navigate(path); setMobileDrawerOpen(false); };
 
-  const handleLogout = () => {
-    logout(); // Remove the token from localStorage
-    navigate("/login"); // Redirect to login page
-  };
-  return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
-      >
-        <Box
-          component="header"
-          sx={{
-            borderBottom: "1px solid var(--mui-palette-divider)",
-            backgroundColor: "white",
-            position: "sticky",
-            top: 0,
-            zIndex: "var(--mui-zIndex-appBar)",
-          }}
-        >
-          <Stack
-            direction="row"
-            spacing={2}
-            sx={{
-              alignItems: "center",
-              justifyContent: "space-between",
-              minHeight: "64px",
-              px: 2,
-            }}
-          >
-            <Stack
-              sx={{ alignItems: "center" }}
-              direction="row"
-              spacing={2}
-            ></Stack>
-            <Stack sx={{ alignItems: "center" }} direction="row" spacing={2}>
-              <Tooltip title="Notifications">
-                <Badge badgeContent={4} color="success" variant="dot">
-                  <IconButton>
-                    <BellIcon />
-                  </IconButton>
-                </Badge>
-              </Tooltip>
-              <Avatar src="/assets/avatar.png" sx={{ cursor: "pointer" }} />
-              <Tooltip title="Se deconnecter">
-                <IconButton onClick={handleLogout}>
-                  <LogoutIcon />
-                </IconButton>
-              </Tooltip>
-            </Stack>
-          </Stack>
-        </Box>
-      </AppBar>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: drawerWidth,
-            boxSizing: "border-box",
-          },
-        }}
-        variant="permanent"
-        anchor="left"
-      >
-        <Toolbar />
-        <Divider />
-        <List>
-          {["Utilisateurs", "Articles"].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <Link
-                to={index === 0 ? "/app/users" : "/app/articles"}
-                style={{ textDecoration: "none", width: "100%" }}
-              >
-                <ListItemButton>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <UsersIcon /> : <ArticleIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </Link>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-      </Drawer>
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
-      >
-        <Toolbar />
-        {children}
-      </Box>
+  const navigationList = (
+    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <Toolbar sx={{ minHeight: "72px !important", gap: 1.25 }}>
+        <Box className="brand-mark" aria-hidden="true">S</Box>
+        <Typography variant="h5" fontWeight={800} color="primary.main">Sckoob</Typography>
+      </Toolbar>
+      <Divider />
+      <List sx={{ px: 1.5, py: 2 }}>
+        {primaryNavigation.map((item) => <ListItemButton key={item.path} selected={location.pathname === item.path} onClick={() => navigateTo(item.path)} sx={{ borderRadius: 2, mb: 0.5, minHeight: 48 }}><ListItemIcon sx={{ minWidth: 42 }}>{item.icon}</ListItemIcon><ListItemText primary={item.label} /></ListItemButton>)}
+      </List>
+      <Divider sx={{ mx: 2 }} />
+      <Typography variant="overline" color="text.secondary" sx={{ px: 3, pt: 2 }}>Manage</Typography>
+      <List sx={{ px: 1.5 }}>
+        {managementNavigation.map((item) => <ListItemButton key={item.path} selected={location.pathname.startsWith(item.path)} onClick={() => navigateTo(item.path)} sx={{ borderRadius: 2 }}><ListItemIcon sx={{ minWidth: 42 }}>{item.icon}</ListItemIcon><ListItemText primary={item.label} /></ListItemButton>)}
+      </List>
     </Box>
   );
+  const currentItem = [...primaryNavigation, ...managementNavigation].find(({ path }) => path === "/" ? location.pathname === "/" : location.pathname.startsWith(path));
+
+  return <Box sx={{ display: "flex", minHeight: "100dvh", bgcolor: "#f6f8fb" }}>
+    <CssBaseline />
+    <AppBar position="fixed" color="inherit" elevation={0} sx={{ width: { md: `calc(100% - ${drawerWidth}px)` }, ml: { md: `${drawerWidth}px` }, borderBottom: "1px solid", borderColor: "divider" }}>
+      <Toolbar sx={{ minHeight: "72px !important", px: { xs: 2, sm: 3 } }}>
+        {!isDesktop && <IconButton edge="start" onClick={() => setMobileDrawerOpen(true)} aria-label="Open navigation"><Menu /></IconButton>}
+        <Typography variant="h6" fontWeight={700} sx={{ ml: isDesktop ? 0 : 1 }}>{currentItem?.label ?? "Sckoob"}</Typography>
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ ml: "auto" }}>
+          <Tooltip title="Notifications"><IconButton aria-label="Notifications"><Badge variant="dot" color="primary"><NotificationsOutlined /></Badge></IconButton></Tooltip>
+          <Avatar sx={{ width: 34, height: 34, bgcolor: "primary.main" }}>S</Avatar>
+          <Tooltip title="Log out"><IconButton aria-label="Log out" onClick={() => { logout(); navigate("/login"); }}><Logout /></IconButton></Tooltip>
+        </Stack>
+      </Toolbar>
+    </AppBar>
+    <Drawer variant="permanent" open sx={{ display: { xs: "none", md: "block" }, width: drawerWidth, "& .MuiDrawer-paper": { width: drawerWidth, boxSizing: "border-box" } }}>{navigationList}</Drawer>
+    <Drawer variant="temporary" open={mobileDrawerOpen} onClose={() => setMobileDrawerOpen(false)} ModalProps={{ keepMounted: true }} sx={{ display: { xs: "block", md: "none" }, "& .MuiDrawer-paper": { width: drawerWidth } }}>{navigationList}</Drawer>
+    <Box component="main" sx={{ flexGrow: 1, width: { md: `calc(100% - ${drawerWidth}px)` }, pt: "72px", pb: { xs: "calc(78px + env(safe-area-inset-bottom))", md: 3 } }}><Box sx={{ width: "100%", maxWidth: 1280, mx: "auto", p: { xs: 2, sm: 3 } }}>{children}</Box></Box>
+    {!isDesktop && <BottomNavigation showLabels value={primaryNavigation.findIndex(({ path }) => path === location.pathname)} onChange={(_, index) => navigate(primaryNavigation[index].path)} sx={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: theme.zIndex.appBar, height: "calc(64px + env(safe-area-inset-bottom))", pb: "env(safe-area-inset-bottom)", borderTop: "1px solid", borderColor: "divider" }}>{primaryNavigation.slice(0, 5).map((item) => <BottomNavigationAction key={item.path} label={item.label} icon={item.icon} />)}</BottomNavigation>}
+    <InstallPrompt />
+  </Box>;
 }
